@@ -57,7 +57,7 @@ function getHtmlFromEmailByDate(date = new Date()) {
                             if (messages.length == 0) {
                                 resolve(undefined);
                             }
-                            console.log(messages);
+
                             for (let item of messages) {
                                 if (!dateEquals(item.attributes.date, date)) {
                                     resolve(undefined);
