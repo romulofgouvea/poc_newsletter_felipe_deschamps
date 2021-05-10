@@ -21,7 +21,7 @@ let config = {
 const RobotScrapy = async () => {
     console.log("Iniciando o Scrapy");
 
-    let mail = await getHtmlFromEmailByDate(new Date(2021, 4, 7));
+    let mail = await getHtmlFromEmailByDate();
 
     if (mail) {
         let path = `${constants.OUTPUT_FOLDER}`;
@@ -37,14 +37,13 @@ const RobotScrapy = async () => {
 };
 
 function getHtmlFromEmailByDate(date = new Date()) {
-    let today = date.toISOString();
 
     return new Promise(async (resolve, reject) => {
         imaps.connect(config).then(function (connection) {
             return connection.openBox('INBOX')
                 .then(function () {
                     let searchCriteria = [
-                        ['SINCE', today],
+                        ['SINCE', date.toISOString()],
                         ['FROM', 'newsletter@filipedeschamps.com.br']
                     ];
 
@@ -56,9 +55,14 @@ function getHtmlFromEmailByDate(date = new Date()) {
                         .then(function (messages) {
 
                             if (messages.length == 0) {
-                                reject();
+                                resolve(undefined);
                             }
+                            console.log(messages);
                             for (let item of messages) {
+                                if (!dateEquals(item.attributes.date, date)) {
+                                    resolve(undefined);
+                                }
+
                                 let all = _.find(item.parts, { "which": "" })
                                 let id = item.attributes.uid;
                                 let idHeader = "Imap-Id: " + id + "\r\n";
@@ -71,6 +75,14 @@ function getHtmlFromEmailByDate(date = new Date()) {
         });
     });
 
+}
+
+function dateEquals(date1, date2) {
+    let someDay = date1.getDate() == date2.getDate();
+    let someMonth = date1.getMonth() == date2.getMonth();
+    let someYear = date1.getFullYear() == date2.getFullYear();
+
+    return someDay && someMonth && someYear;
 }
 
 module.exports = { RobotScrapy };
