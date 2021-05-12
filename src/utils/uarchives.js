@@ -46,6 +46,18 @@ function existsFile(source, nameFile = "") {
     return fs.existsSync(localUrl) ? `${source}/${nameFile}` : "";
 }
 
+const readFile = (source, nameFile) => {
+    try {
+        if (!existsFile(source, nameFile)) throw "File not exists";
+
+        var localUrl = `${getBaseUrl(source)}/${nameFile}`;
+        return fs.readFileSync(localUrl);
+    } catch (error) {
+        return [];
+    }
+};
+
+
 const loadFile = (source, nameFile) => {
     try {
         if (!existsFile(source, nameFile)) throw "File not exists";
@@ -123,9 +135,9 @@ function moveFile(source, newSource, callback) {
 const writeFileSync = (source, nameFile, data) => {
     try {
         var localUrl = `${getBaseUrl(source)}/${nameFile}`;
-        
+
         createFolder(localUrl);
-        
+
         fs.writeFileSync(localUrl, data, err => {
             if (err) throw err;
         });
@@ -274,6 +286,7 @@ const copyOrDeleteFilesbyArr = (source, arrData, deleteFiles = false) => {
 }
 
 module.exports = {
+    readFile,
     loadFile,
     loadFileJson,
     writeFileSync,

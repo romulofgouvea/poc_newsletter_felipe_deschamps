@@ -27,6 +27,8 @@
     "imap-simple": "^5.0.0",
     "jssoup": "0.0.12",
     "lodash": "^4.17.21",
-    "mailparser": "^3.2.0"
+    "mailparser": "^3.2.0",
+    "node-font2base64": "^0.7.1",
+    "node-html-to-image": "^3.1.0"
   }
 }

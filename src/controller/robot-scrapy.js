@@ -33,7 +33,6 @@ const RobotScrapy = async () => {
     }
 
     console.log("Scrapy finalizado");
-    process.exit();
 };
 
 function getHtmlFromEmailByDate(date = new Date()) {
