@@ -8,15 +8,17 @@
 ## 1 Scrapy
  - imap-simple
 ## 2 Gerar Imagens das notícias
- - 
+ - jssoup
+ - html-to-text
 ## 3 Publicação no instagram das imagens
-
+ - instagram-private-api
+ 
 #  Instruções
 
 ## Iniciando o projeto
 
 ```bash
-git clone 
+git clone https://github.com/romulofgouvea/poc_newsletter_felipe_deschamps.git
 
 cd maker-poc-newsletter && npm i
 
@@ -28,12 +30,12 @@ touch .env
  Lista de ENV utilizadas:
  
  - Instagram Api
-      - IG_USERNAME=
-      - IG_PASSWORD=
+    - IG_USERNAME=
+    - IG_PASSWORD=
       
  - Gerais
-   PUBLISH_FEED=
-   PUBLISH_STORIES=
+    - PUBLISH_FEED=
+    - PUBLISH_STORIES=
 
 ## Contributing
 <table>
