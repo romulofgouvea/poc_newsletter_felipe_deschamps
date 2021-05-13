@@ -28,11 +28,17 @@ touch .env
 ```
 
  Lista de ENV utilizadas:
- 
+
+ - Gmail imap
+      - GMAIL_USERNAME=
+      - GMAIL_PASSWORD=
+      - GMAIL_HOST=
+      - GMAIL_PORT=
+
  - Instagram Api
     - IG_USERNAME=
     - IG_PASSWORD=
-      
+
  - Gerais
     - PUBLISH_FEED=
     - PUBLISH_STORIES=
