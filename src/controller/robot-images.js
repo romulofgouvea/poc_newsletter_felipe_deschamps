@@ -44,7 +44,6 @@ const RobotImages = async () => {
   }
 
   console.log("Geração das imagens finalizada");
-  process.exit();
 };
 
 function generateImage(type, title, content, action, output = './image1.png') {
@@ -264,7 +263,7 @@ function generateImage(type, title, content, action, output = './image1.png') {
   }
 
   let titleName = title.toLowerCase().replace(/\s/g, '_').substring(0, 10);
-  let nameFile = `${today.getDate()}_${titleName}_${type.toLowerCase()}.png`;
+  let nameFile = `${today.getDate()}_${titleName}_${type.toLowerCase()}.jpg`;
   output = UString.removeAcento(`${pathFolderImages}/${type.toLowerCase()}/${nameFile}`);
 
   UArchive.createFolder(output);

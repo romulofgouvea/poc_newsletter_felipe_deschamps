@@ -205,6 +205,13 @@ const removeGroupFiles = group => {
     }
 }
 
+function getDirectoriesCB(pathFolder, callback) {
+    fs.readdir(pathFolder, function (err, content) {
+        if (err) return callback(err)
+        callback(null, content)
+    })
+}
+
 const listFilesDir = (source, filterExt = "") => {
     try {
         source = getBaseUrl(source);
@@ -286,6 +293,7 @@ const copyOrDeleteFilesbyArr = (source, arrData, deleteFiles = false) => {
 }
 
 module.exports = {
+    getDirectoriesCB,
     readFile,
     loadFile,
     loadFileJson,
