@@ -23,7 +23,7 @@ const RobotPubInstagram = async () => {
         .replace(/\\/g, '/');
 
     // STORIES
-    if (Boolean(process.env.PUBLISH_STORIES)) {
+    if (process.env.PUBLISH_STORIES == "true") {
         console.log("INIT STORIES");
 
         let filesStories = await new Promise((resolve, reject) => {
@@ -44,8 +44,6 @@ const RobotPubInstagram = async () => {
                     ],
                 },
             });
-
-            break;
         }
 
         console.log("FINISH STORIES");
@@ -53,7 +51,7 @@ const RobotPubInstagram = async () => {
 
 
     //FEED
-    if (Boolean(process.env.PUBLISH_FEED)) {
+    if (process.env.PUBLISH_FEED == "true") {
         console.log("INIT FEED");
 
         let filesFeed = await new Promise((resolve, reject) => {
@@ -96,9 +94,17 @@ async function login() {
     console.log("Logando ...");
     ig.state.generateDevice(process.env.IG_USERNAME);
     ig.state.proxyUrl = process.env.IG_PROXY;
-    const log = await ig.account.login(process.env.IG_USERNAME, process.env.IG_PASSWORD);
+    //await ig.account.logout();
 
-    console.log("Logado: " + log.username);
+    let current = {};
+    try {
+        current = await ig.account.currentUser();
+    } catch (e) {
+        current = await ig.account.login(process.env.IG_USERNAME, process.env.IG_PASSWORD);
+    }
+
+
+    console.log("Logado: " + current.username);
 }
 
 /**
