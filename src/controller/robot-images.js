@@ -270,7 +270,12 @@ function generateImage(type, title, content, action, output = './image1.png') {
 
   return new Promise((resolve, reject) => {
     nodeHtmlToImage({
+      puppeteerArgs: {
+        executablePath: process.env.CHROMIUM_PATH,
+        args: ['--no-sandbox'],
+      },
       html: htmlFinish,
+      quality: 100,
       content: [
         {
           font_title: font_title,
@@ -284,13 +289,16 @@ function generateImage(type, title, content, action, output = './image1.png') {
       ],
     })
       .then(() => resolve(true))
-      .catch(e => reject(false))
+      .catch(e => {
+        console.log(e);
+        resolve(false)
+      })
   })
 }
 
 function extractTextOfFileScrapy() {
   //Ler o html
-  let html_mail = UArchive.loadFile(`${ASSETS_FOLDER}/output`, 'html_mail.html')[0];
+  let html_mail = UArchive.loadFile(`${constants.ASSETS_FOLDER}/output`, 'html_mail.html')[0];
 
   var soup = new JSSoup(html_mail);
   var p = soup.findAll('p');
