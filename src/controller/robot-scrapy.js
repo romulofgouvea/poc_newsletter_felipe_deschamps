@@ -3,7 +3,7 @@ let imaps = require('imap-simple');
 const simpleParser = require('mailparser').simpleParser;
 const _ = require('lodash');
 
-import { constants } from "../../config";
+import { constants } from "~/config";
 
 import { UArchive } from "~/utils";
 
@@ -24,8 +24,7 @@ const RobotScrapy = async () => {
     let mail = await getHtmlFromEmailByDate();
 
     if (mail) {
-        let path = `${constants.OUTPUT_FOLDER}`;
-        await UArchive.writeFileSync(path, "html_mail.html", mail.textAsHtml);
+        await UArchive.writeFileSync(constants.ASSETS_FOLDER + "/output", "html_mail.html", mail.textAsHtml);
 
         console.log("Arquivo salvo!");
     } else {

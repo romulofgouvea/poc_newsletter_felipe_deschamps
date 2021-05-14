@@ -5,18 +5,18 @@ import { format } from 'date-fns';
 
 import archiver from "archiver";
 
-import { constants } from "../../config";
+import { constants } from "~/config";
 
-const BASE_URL = constants.BASE_URL;
+const SOURCE_DIR = constants.BASE_DIR + "/src";
 
 const removeBase = source => {
     return source.replace(/.*src/g, "").replace(/\\\\|\\|\/|\/\//g, "/");
 }
 
-function getBaseUrl(source) {
+function getSourceDir(source) {
     if (!source) throw "Source is empty";
     source = removeBase(source);
-    return path.join(BASE_URL, source);
+    return path.join(SOURCE_DIR, source);
 }
 
 const getNameFile = source => {
@@ -37,11 +37,11 @@ const getNameFolder = () => {
 function existsFile(source, nameFile = "") {
     var localUrl = "";
     if (!nameFile) {
-        localUrl = getBaseUrl(source);
+        localUrl = getSourceDir(source);
         source = getMidNamePath(source);
         nameFile = getNameFile(localUrl);
     } else {
-        localUrl = `${getBaseUrl(source)}/${nameFile}`;
+        localUrl = `${getSourceDir(source)}/${nameFile}`;
     }
     return fs.existsSync(localUrl) ? `${source}/${nameFile}` : "";
 }
@@ -50,7 +50,7 @@ const readFile = (source, nameFile) => {
     try {
         if (!existsFile(source, nameFile)) throw "File not exists";
 
-        var localUrl = `${getBaseUrl(source)}/${nameFile}`;
+        var localUrl = `${getSourceDir(source)}/${nameFile}`;
         return fs.readFileSync(localUrl);
     } catch (error) {
         return [];
@@ -62,7 +62,7 @@ const loadFile = (source, nameFile) => {
     try {
         if (!existsFile(source, nameFile)) throw "File not exists";
 
-        var localUrl = `${getBaseUrl(source)}/${nameFile}`;
+        var localUrl = `${getSourceDir(source)}/${nameFile}`;
         var arch = fs
             .readFileSync(localUrl, "utf8")
             .toString()
@@ -76,7 +76,7 @@ const loadFile = (source, nameFile) => {
 
 const loadFileJson = (source, nameFile) => {
     try {
-        var localUrl = `${getBaseUrl(source)}/${nameFile}.json`;
+        var localUrl = `${getSourceDir(source)}/${nameFile}.json`;
         if (!existsFile(localUrl)) throw "File not exists";
         return JSON.parse(fs.readFileSync(localUrl, "utf8"));
     } catch (error) {
@@ -87,7 +87,7 @@ const loadFileJson = (source, nameFile) => {
 
 const appendFile = (source, nameFile, data) => {
     try {
-        var localUrl = `${getBaseUrl(source)}/${nameFile}`;
+        var localUrl = `${getSourceDir(source)}/${nameFile}`;
         fs.appendFile(localUrl, data, err => {
             if (err) throw err;
         });
@@ -98,8 +98,8 @@ const appendFile = (source, nameFile, data) => {
 };
 
 function renameFile(source, newSource) {
-    source = getBaseUrl(source);
-    newSource = getBaseUrl(newSource);
+    source = getSourceDir(source);
+    newSource = getSourceDir(newSource);
 
     if (!this.existsFile(source)) throw "File not exists";
 
@@ -114,8 +114,8 @@ function renameFile(source, newSource) {
 }
 
 function moveFile(source, newSource, callback) {
-    source = getBaseUrl(source);
-    newSource = getBaseUrl(newSource);
+    source = getSourceDir(source);
+    newSource = getSourceDir(newSource);
     if (!existsFile(source)) throw "File not exists";
 
     var readStream = fs.createReadStream(source);
@@ -134,7 +134,7 @@ function moveFile(source, newSource, callback) {
 
 const writeFileSync = (source, nameFile, data) => {
     try {
-        var localUrl = `${getBaseUrl(source)}/${nameFile}`;
+        var localUrl = `${getSourceDir(source)}/${nameFile}`;
 
         createFolder(localUrl);
 
@@ -150,7 +150,7 @@ const writeFileSync = (source, nameFile, data) => {
 
 const writeFileJson = (source, nameFile, data) => {
     try {
-        var localUrl = `${getBaseUrl(source)}/${nameFile}.json`;
+        var localUrl = `${getSourceDir(source)}/${nameFile}.json`;
         writeFileSync(localUrl, JSON.stringify(data));
         return existsFile(localUrl);
     } catch (error) {
@@ -161,7 +161,7 @@ const writeFileJson = (source, nameFile, data) => {
 
 const writeFileMP3 = async (source, nameFile, data) => {
     try {
-        var localUrl = `${getBaseUrl(source)}/${nameFile}.mp3`;
+        var localUrl = `${getSourceDir(source)}/${nameFile}.mp3`;
         writeFileSync(localUrl, data);
         return existsFile(localUrl);
     } catch (error) {
@@ -171,7 +171,7 @@ const writeFileMP3 = async (source, nameFile, data) => {
 
 const writeFileStream = async (source, nameFile) => {
     try {
-        var localUrl = `${getBaseUrl(source)}/${nameFile}`;
+        var localUrl = `${getSourceDir(source)}/${nameFile}`;
         fs.createWriteStream(localUrl);
         return existsFile(localUrl);
     } catch (error) {
@@ -181,7 +181,7 @@ const writeFileStream = async (source, nameFile) => {
 
 const deleteArchive = (source, nameFile = "") => {
     try {
-        source = getBaseUrl(source);
+        source = getSourceDir(source);
         var localUrl = !nameFile ? source : `${source}/${nameFile}`;
         var exists = existsFile(localUrl);
         if (!exists) {
@@ -200,7 +200,7 @@ const deleteArchive = (source, nameFile = "") => {
 
 const removeGroupFiles = group => {
     for (var gp of group) {
-        const source = getBaseUrl(gp);
+        const source = getSourceDir(gp);
         deleteArchive(source);
     }
 }
@@ -214,7 +214,7 @@ function getDirectoriesCB(pathFolder, callback) {
 
 const listFilesDir = (source, filterExt = "") => {
     try {
-        source = getBaseUrl(source);
+        source = getSourceDir(source);
         var files = fs.readdirSync(source, err => { if (err) throw err })
 
         return files.map(f => {
@@ -232,25 +232,23 @@ const listFilesDir = (source, filterExt = "") => {
 const createFolder = source => {
     try {
         var arrSource = removeBase(source).split('/');
-        var t = arrSource.reduce((ac, value) => {
+        return arrSource.reduce((ac, value) => {
             var val = path.extname(value) ? "" : "\\" + value;
             var temp = `${ac}${val}`;
-            var url = getBaseUrl(temp);
+            var url = getSourceDir(temp);
             if (!fs.existsSync(url)) {
                 fs.mkdirSync(url);
             }
             return temp;
         });
-        return t;
     } catch (error) {
-        //console.log(error);
         return "";
     }
 };
 
 const zipFolder = (source, output) => {
-    source = getBaseUrl(source)
-    output = getBaseUrl(output)
+    source = getSourceDir(source)
+    output = getSourceDir(output)
 
     const archive = archiver('zip', { zlib: { level: 9 } });
     const stream = fs.createWriteStream(output);
@@ -306,7 +304,7 @@ module.exports = {
     deleteArchive,
     moveFile,
     existsFile,
-    getBaseUrl,
+    getSourceDir,
     removeGroupFiles,
     listFilesDir,
     getNameFile,

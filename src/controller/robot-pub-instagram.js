@@ -7,7 +7,7 @@ import { readFile } from 'fs';
 import { promisify } from 'util';
 const readFileAsync = promisify(readFile);
 
-import { constants } from "../../config";
+import { constants } from "~/config";
 import { UArchive } from "~/utils";
 
 

@@ -4,7 +4,7 @@ import nodeHtmlToImage from 'node-html-to-image';
 import { htmlToText } from 'html-to-text';
 const font2base64 = require('node-font2base64');
 
-import { constants } from "../../config";
+import { constants } from "~/config";
 import { UArchive, UString } from "~/utils";
 
 const font_title = font2base64.encodeToDataUrlSync(`${constants.ASSETS_FOLDER}/fonts/poppins/Poppins-Bold.ttf`);
@@ -290,8 +290,7 @@ function generateImage(type, title, content, action, output = './image1.png') {
 
 function extractTextOfFileScrapy() {
   //Ler o html
-  let path = `${constants.OUTPUT_FOLDER}`;
-  let html_mail = UArchive.loadFile(path, 'html_mail.html')[0];
+  let html_mail = UArchive.loadFile(`${ASSETS_FOLDER}/output`, 'html_mail.html')[0];
 
   var soup = new JSSoup(html_mail);
   var p = soup.findAll('p');
