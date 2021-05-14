@@ -43,6 +43,17 @@ touch .env
     - PUBLISH_FEED=
     - PUBLISH_STORIES=
 
+## Executando com docker
+
+Entre na pasta principal da aplicação, abra o terminal e execute o comando para gerar a imagem da aplicação: 
+```
+docker build -t=poc-newsletter:latest  .
+```
+Rode o comando abaixo para criar o container:
+```
+docker run -n poc poc-newsletter:latest
+```
+
 ## Contributing
 <table>
   <tr>
