@@ -262,7 +262,7 @@ function generateImage(type, title, content, action, output = './image1.png') {
   `;
   }
 
-  let titleName = title.toLowerCase().replace(/\s/g, '_').substring(0, 10);
+  let titleName = title.toLowerCase().replace(/\s/g, '_').replace(/\//g, '_').replace(/\\/g, '_').substring(0, 10);
   let nameFile = `${today.getDate()}_${titleName}_${type.toLowerCase()}.jpg`;
   output = UString.removeAcento(`${pathFolderImages}/${type.toLowerCase()}/${nameFile}`);
 
