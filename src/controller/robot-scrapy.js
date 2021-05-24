@@ -47,6 +47,8 @@ function getHtmlFromEmailByDate(date = new Date()) {
         imaps.connect(config).then(function (connection) {
             return connection.openBox('INBOX')
                 .then(function () {
+                    console.log('Lendo Inbox...');
+
                     let searchCriteria = [
                         ['SINCE', date.toISOString()],
                         ['FROM', 'newsletter@filipedeschamps.com.br']
@@ -72,6 +74,7 @@ function getHtmlFromEmailByDate(date = new Date()) {
                                 let id = item.attributes.uid;
                                 let idHeader = "Imap-Id: " + id + "\r\n";
                                 simpleParser(idHeader + all.body, (err, mail) => {
+                                    console.log('Email encontrado.');
                                     resolve(mail);
                                 });
                             }
@@ -91,6 +94,7 @@ function dateEquals(date1, date2) {
 }
 
 function extractTextOfFileScrapy(mail) {
+    console.log('Formatando saída do email');
     let arrayTextMail = mail.text.split('\n\n');
 
     var textExtracted = [];
