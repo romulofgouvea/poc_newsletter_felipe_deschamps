@@ -5,7 +5,7 @@ const _ = require('lodash');
 
 import { constants } from "~/config";
 
-import { UArchive } from "~/utils";
+import { UArchive, UString } from "~/utils";
 
 let config = {
     imap: {
@@ -24,7 +24,14 @@ const RobotScrapy = async () => {
     let mail = await getHtmlFromEmailByDate();
 
     if (mail) {
-        await UArchive.writeFileSync(constants.ASSETS_FOLDER + "/output", "html_mail.html", mail.textAsHtml);
+
+        let jsonOutput = extractTextOfFileScrapy(mail);
+
+        await UArchive.writeFileSync(
+            constants.ASSETS_FOLDER + "/output",
+            "json_mail.json",
+            JSON.stringify(jsonOutput)
+        );
 
         console.log("Arquivo salvo!");
     } else {
@@ -82,5 +89,33 @@ function dateEquals(date1, date2) {
 
     return someDay && someMonth && someYear;
 }
+
+function extractTextOfFileScrapy(mail) {
+    let arrayTextMail = mail.text.split('\n\n');
+
+    var textExtracted = [];
+
+    for (let i = 2; i < arrayTextMail.length; i++) {
+        let txt = arrayTextMail[i].replace(/\n/g, ' ');
+
+        if (txt.toLowerCase().includes('afiliado')
+            || txt.toLowerCase().includes('patrocinado')
+            || txt.toLowerCase().includes('cancelar inscri')) {
+            continue;
+        }
+        var txtSplit = txt.split(':');
+        textExtracted.push({
+            title: UString.capitalizeFirstLetter(txtSplit[0].trim()) + ":",
+            content: UString.capitalizeFirstLetter(txtSplit[1].trim())
+        });
+    }
+
+    return {
+        title: arrayTextMail[0].replace(/\n/g, ' '),
+        description: arrayTextMail[1].replace(/\n/g, ' '),
+        news: textExtracted
+    };
+}
+
 
 module.exports = { RobotScrapy };
