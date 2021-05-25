@@ -1,7 +1,5 @@
 import 'dotenv/config';
-import JSSoup from 'jssoup';
 import nodeHtmlToImage from 'node-html-to-image';
-import { htmlToText } from 'html-to-text';
 const font2base64 = require('node-font2base64');
 
 import { constants } from "~/config";
@@ -21,7 +19,14 @@ const RobotImages = async () => {
   console.log("Iniciando a geração das imagens");
 
   //Filtrando os textos
-  let textScraped = extractTextOfFileScrapy();
+  let json_mail = UArchive.loadFileJson(`${constants.ASSETS_FOLDER}/output`, 'json_mail') || [];
+
+  if (!json_mail) {
+    console.log('Erro ao ler json_mail');
+    process.exit();
+  }
+
+  let textScraped = json_mail.news;
   console.log(textScraped.length + " notícias");
 
   for (let [index, news] of textScraped.entries()) {
@@ -48,12 +53,12 @@ const RobotImages = async () => {
 
 function generateImage(type, title, content, action, output = './image1.png') {
 
-  content = UString.capitalizeFirstLetter(content);
+  let lenghtCharContent = 510 - (Math.round(title.length / 27) * 10);
 
-  if (content.length > 500) {
-    content = content.substring(0, 500) + "... [Veja mais na newsletter]"
+  if (content.length > lenghtCharContent) {
+    content = content.substring(0, lenghtCharContent) + "... [Veja mais na newsletter]"
   }
-
+  
   let htmlFinish = ``;
   if (type == 'STORIES') {
     htmlFinish = `
@@ -77,39 +82,30 @@ function generateImage(type, title, content, action, output = './image1.png') {
             }
 
             body {
-                /* background-color: black; */
+                background-color: #FFF;
                 width: 1080px;
                 min-height: 1920px;
                 max-height: 1920px;
                 font-family: 'PoppinsRegular';
                 display: flex;
                 flex-direction: column;
-                justify-content: flex-start;
+                justify-content: strech;
                 margin: 0;
                 padding: 0;
             }
 
-            div {
-                padding: 50px;
-                background-color: #FFF;
-            }
-
             .div1 {
-                flex: 0.75;
-                justify-content: flex-start;
-                padding-bottom: 50px;
-                max-height: 1440px;
-                min-height: 1440px;
+                flex: 1;
+                background-color: #FFF;
+                padding: 180px 60px 50px 60px;
             }
 
             .div2 {
-                flex: 0.25;
+                flex: 0.10;
                 justify-content: center;
                 align-items: center;
                 text-align: center;
                 background-color: rgb(242, 218, 94);
-                max-height: 480px;
-                min-height: 480px;
             }
 
             p {
@@ -120,7 +116,7 @@ function generateImage(type, title, content, action, output = './image1.png') {
 
             .title {
                 font-family: 'PoppinsBold';
-                font-size: 60px;
+                font-size: 65px;
             }
 
             .content {
@@ -150,7 +146,6 @@ function generateImage(type, title, content, action, output = './image1.png') {
         </div>
         <div class="div2">
             <img src="{{image_felipe}}" />
-            <p class="title action">{{action}}</p>
         </div>
     </body>
 
@@ -294,32 +289,6 @@ function generateImage(type, title, content, action, output = './image1.png') {
         resolve(false)
       })
   })
-}
-
-function extractTextOfFileScrapy() {
-  //Ler o html
-  let html_mail = UArchive.loadFile(`${constants.ASSETS_FOLDER}/output`, 'html_mail.html')[0];
-
-  var soup = new JSSoup(html_mail);
-  var p = soup.findAll('p');
-
-  var textExtracted = [];
-
-  for (let i = 2; i < p.length; i++) {
-    let txt = htmlToText(p[i].text);
-
-    if (txt.toLowerCase().includes('afiliado')
-      || txt.toLowerCase().includes('patrocinado')
-      || txt.toLowerCase().includes('cancelar inscri')) {
-      continue;
-    }
-    var txtSplit = txt.split(':');
-    textExtracted.push({
-      title: txtSplit[0].trim() + ":",
-      content: txtSplit[1].trim()
-    });
-  }
-  return textExtracted;
 }
 
 module.exports = { RobotImages };
