@@ -99,12 +99,12 @@ async function login() {
     let current = {};
     try {
         current = await ig.account.currentUser();
+        console.log("Logado: " + current.username);
     } catch (e) {
         current = await ig.account.login(process.env.IG_USERNAME, process.env.IG_PASSWORD);
+        console.log("Login: " + current.username);
     }
 
-
-    console.log("Logado: " + current.username);
 }
 
 /**
