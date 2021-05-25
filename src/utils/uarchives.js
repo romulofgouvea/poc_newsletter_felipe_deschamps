@@ -276,6 +276,16 @@ const copyOrDeleteFolderByExt = (source, ext, newSource, deleteFiles = false) =>
     })
 }
 
+const deleteFolder = (source, ext = "") => {
+    try {
+        fs.rmdirSync(source, { recursive: true });
+
+        console.log(`${source} is deleted!`);
+    } catch (err) {
+        console.error(`Error while deleting ${source}.`);
+    }
+}
+
 const copyOrDeleteFilesbyArr = (source, arrData, deleteFiles = false) => {
     if (deleteFiles) {
         removeGroupFiles(arrData)
@@ -302,6 +312,7 @@ module.exports = {
     appendFile,
     renameFile,
     deleteArchive,
+    deleteFolder,
     moveFile,
     existsFile,
     getSourceDir,

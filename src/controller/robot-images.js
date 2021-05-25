@@ -18,6 +18,9 @@ const pathFolderImages = `./src/assets/output/${today.getFullYear()}/${today.get
 const RobotImages = async () => {
   console.log("Iniciando a geração das imagens");
 
+  //Limpando a pasta
+  UArchive.deleteFolder(pathFolderImages);
+  
   //Filtrando os textos
   let json_mail = UArchive.loadFileJson(`${constants.ASSETS_FOLDER}/output`, 'json_mail') || [];
 
