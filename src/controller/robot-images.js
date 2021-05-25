@@ -101,7 +101,7 @@ function generateImage(type, title, content, action, output = './image1.png') {
             .div1 {
                 flex: 1;
                 background-color: #FFF;
-                padding: 180px 60px 50px 60px;
+                padding: 150px 60px 50px 60px;
             }
 
             .div2 {
