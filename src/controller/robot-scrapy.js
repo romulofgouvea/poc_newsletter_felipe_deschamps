@@ -104,13 +104,14 @@ function extractTextOfFileScrapy(mail) {
 
         if (txt.toLowerCase().includes('afiliado')
             || txt.toLowerCase().includes('patrocinado')
+            || txt.toLowerCase().includes('link para')
             || txt.toLowerCase().includes('cancelar inscri')) {
             continue;
         }
         var txtSplit = txt.split(':');
         textExtracted.push({
             title: UString.capitalizeFirstLetter(txtSplit[0].trim()) + ":",
-            content: UString.capitalizeFirstLetter(txtSplit[1].trim())
+            content: UString.capitalizeFirstLetter(txtSplit.slice(1).join(':').trim())
         });
     }
 

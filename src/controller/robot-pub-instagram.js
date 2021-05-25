@@ -16,6 +16,14 @@ const RobotPubInstagram = async () => {
 
     await login();
 
+    //Filtrando os textos
+    let json_mail = UArchive.loadFileJson(`${constants.ASSETS_FOLDER}/output`, 'json_mail') || [];
+
+    if (!json_mail) {
+        console.log('Erro ao ler json_mail');
+        process.exit();
+    }
+
     const instaDeschamps = await generateUsertagFromName('filipedeschamps', 0.5, 0.7);
 
     const d = new Date();
@@ -33,6 +41,7 @@ const RobotPubInstagram = async () => {
         })
 
         for (let i of filesStories) {
+            console.log(folderImages + "/stories/" + i);
             const file = await readFileAsync(folderImages + "/stories/" + i);
 
             await ig.publish.story({
@@ -64,6 +73,7 @@ const RobotPubInstagram = async () => {
 
             let items = [];
             for (let i of filesFeed) {
+                console.log(folderImages + "/feed/" + i);
                 const file = await readFileAsync(folderImages + "/feed/" + i);
                 items.push({
                     file,
@@ -75,9 +85,8 @@ const RobotPubInstagram = async () => {
                 });
             }
 
-
             await ig.publish.album({
-                caption: 'Newsletter @filipedeschamps',
+                caption: `${json_mail.title}: ${json_mail.description} - @filipedeschamps`,
                 items
             });
         }
