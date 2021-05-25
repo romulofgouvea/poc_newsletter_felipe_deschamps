@@ -51,7 +51,7 @@ docker build -t=poc-newsletter:latest  .
 ```
 Rode o comando abaixo para criar o container:
 ```
-docker run -n poc poc-newsletter:latest
+docker run --name poc poc-newsletter:latest
 ```
 
 ## Contributing
