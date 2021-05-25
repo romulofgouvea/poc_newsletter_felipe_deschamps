@@ -31,19 +31,23 @@ const RobotImages = async () => {
 
   for (let [index, news] of textScraped.entries()) {
 
-    await generateImage(
-      'STORIES',
-      news.title,
-      news.content,
-      "Cadastre na newsletter e receba todas as notícias",
-    );
+    if (process.env.PUBLISH_STORIES == "true") {
+      await generateImage(
+        'STORIES',
+        news.title,
+        news.content,
+        "Cadastre na newsletter e receba todas as notícias",
+      );
+    }
 
-    await generateImage(
-      'FEED',
-      news.title,
-      news.content,
-      "Cadastre na newsletter e receba todas as notícias",
-    );
+    if (process.env.PUBLISH_FEED == "true") {
+      await generateImage(
+        'FEED',
+        news.title,
+        news.content,
+        "Cadastre na newsletter e receba todas as notícias",
+      );
+    }
 
     console.log(`Gerada - ${index + 1} - ${news.title}`);
   }
@@ -58,7 +62,7 @@ function generateImage(type, title, content, action, output = './image1.png') {
   if (content.length > lenghtCharContent) {
     content = content.substring(0, lenghtCharContent) + "... [Veja mais na newsletter]"
   }
-  
+
   let htmlFinish = ``;
   if (type == 'STORIES') {
     htmlFinish = `
