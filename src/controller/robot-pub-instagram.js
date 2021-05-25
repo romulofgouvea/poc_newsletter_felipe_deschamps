@@ -86,7 +86,7 @@ const RobotPubInstagram = async () => {
             }
 
             await ig.publish.album({
-                caption: `${json_mail.title}: ${json_mail.description} - @filipedeschamps`,
+                caption: `${json_mail.description} ${json_mail.title} @filipedeschamps`,
                 items
             });
         }
